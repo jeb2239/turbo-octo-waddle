@@ -1,6 +1,35 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test", "go_path", "go_vet_test")
 
 gazelle(
     name = "gazelle",
     prefix = "coverage",
+)
+
+go_library(
+    name = "go_default_library",
+    srcs = ["lib.go"],
+    importpath = "coverage",
+    visibility = ["//visibility:public"],
+    deps = ["@org_uber_go_zap//:go_default_library"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["lib_test.go"],
+    embed = [":go_default_library"],
+    deps = ["@org_uber_go_zap//:go_default_library"],
+)
+
+go_path(
+    name = "all_srcs",
+    deps = [
+        "//:go_default_library",
+        "//cow:go_default_library",
+    ],
+)
+
+go_vet_test(
+    name = "vet",
+    data = ["all_srcs"],
 )

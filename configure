@@ -52,10 +52,10 @@ setup_git() {
 
 setup_vscode() {
   bazel build @bazel_gopath//:bazel-gopath
-  
+
   # Populate bazel-sandboxfs/ with symlinks to all source files, required later
   # on as targets for the generated gopath.
-  bazel build //src:main
+  bazel build //... --keep_going
 
   # The glob below is necessary because of
   # https://github.com/bazelbuild/rules_go/issues/1239.  Given that we have
